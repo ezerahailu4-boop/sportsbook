@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   const gate = await requireAdmin();

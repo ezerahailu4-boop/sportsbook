@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { money, combineOdds, potentialReturn, potentialProfit, isPositive, type Money } from "@/lib/money";
 import { checkCanBet } from "./responsible-gambling.service";
-
-const prisma = new PrismaClient();
 
 export interface RequestedSelection {
   eventId: string; // internal Event.id

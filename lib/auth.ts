@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { hashPassword, verifyPassword, newSessionToken } from "@/lib/auth-crypto";
 import { checkJurisdiction } from "@/services/jurisdiction/jurisdiction.service";
 
-const prisma = new PrismaClient();
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export interface RegisterInput {

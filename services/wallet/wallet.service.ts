@@ -1,9 +1,8 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { getPaymentProvider } from "@/services/payments/payment-factory";
 import type { PaymentProvider } from "@/services/payments/payment-provider";
-
-const prisma = new PrismaClient();
 
 function getProvider(): PaymentProvider {
   return getPaymentProvider();

@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { requireSessionUser, unauthenticatedResponse } from "@/lib/require-session";
-
-const prisma = new PrismaClient();
 
 export async function GET() {
   const user = await requireSessionUser();
   if (!user) return NextResponse.json(unauthenticatedResponse(), { status: 401 });
 
-  const wallet = await prisma.wallet.findFirst({ where: { userId: user.id, mode: "DEMO" } });
+  const wallet = await prisma.wallet.findFirst({ where: { userId: user.id } });
   if (!wallet) {
     return NextResponse.json({ success: true, data: [], error: null, meta: {} });
   }

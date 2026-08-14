@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { requireFullAdmin } from "@/lib/require-admin";
-
-const prisma = new PrismaClient();
 
 // Audit logs are the most sensitive admin view — full admin only, not
 // support/risk roles.

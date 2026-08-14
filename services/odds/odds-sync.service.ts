@@ -2,11 +2,9 @@
 // handler. Pulls configured sports, fetches events+odds, normalizes them,
 // and upserts into Postgres — detecting price changes and expired events
 // along the way (spec section 7, steps 1-11).
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { getEventsForSport, getSports } from "./odds.service";
 import type { NormalizedEvent } from "./odds-normalizer";
-
-const prisma = new PrismaClient();
 
 // Sports actively tracked by the sync job. In production this should come
 // from an admin-configurable table rather than a hardcoded list.

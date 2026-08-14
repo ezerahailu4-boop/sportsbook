@@ -1,8 +1,7 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { validateBetRequest, type PlaceBetRequest, type ValidationResult } from "./bet-validation.service";
-
-const prisma = new PrismaClient();
 
 export type PlaceBetResult =
   | { success: true; betId: string }
