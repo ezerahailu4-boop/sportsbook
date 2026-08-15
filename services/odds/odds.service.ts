@@ -20,7 +20,6 @@ export async function getSports(): Promise<{ sports: OddsApiSport[]; demoMode: b
       sports: [
         { key: "soccer_epl", group: "Soccer", title: "EPL", description: "English Premier League", active: true, has_outrights: false },
         { key: "basketball_nba", group: "Basketball", title: "NBA", description: "US Basketball", active: true, has_outrights: false },
-        { key: "tennis_atp", group: "Tennis", title: "ATP", description: "Men's Tennis", active: true, has_outrights: false },
       ],
       demoMode: true,
     };
@@ -62,13 +61,19 @@ export async function getLiveEvents(): Promise<OddsResult> {
     return { events: getMockEvents("live"), demoMode: true };
   }
 
-  const sports = ["soccer_epl", "soccer_spain_la_liga", "basketball_nba", "tennis_atp"];
+  const sports = ["soccer_epl", "soccer_spain_la_liga", "basketball_nba"];
   const allEvents: NormalizedEvent[] = [];
+  let anyDemo = false;
 
   for (const s of sports) {
-    const res = await getEventsForSport(s);
-    allEvents.push(...res.events.filter((e) => e.isLive));
+    try {
+      const res = await getEventsForSport(s);
+      allEvents.push(...res.events.filter((e) => e.isLive));
+      if (res.demoMode) anyDemo = true;
+    } catch (err) {
+      console.error(`Skipping sport ${s} in getLiveEvents:`, (err as Error).message);
+    }
   }
 
-  return { events: allEvents, demoMode: false };
+  return { events: allEvents, demoMode: anyDemo };
 }
