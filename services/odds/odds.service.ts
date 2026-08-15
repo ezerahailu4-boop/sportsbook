@@ -1,7 +1,7 @@
 // The single entry point the rest of the app (API routes, sync jobs) should
 // use for odds data. Never call lib/odds-api.ts or the mock provider
 // directly from a route handler — go through here so caching, validation,
-// and demo-mode fallback are applied consistently.
+// and demo-mode fallback are applied consistently. 
 import * as oddsApi from "@/lib/odds-api";
 import { normalizeEvents, type NormalizedEvent } from "./odds-normalizer";
 import { validateEvent } from "./odds-validator";
