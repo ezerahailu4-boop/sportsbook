@@ -1,14 +1,15 @@
 import { Flame, Radio, RefreshCw } from "lucide-react";
-import { getEventsForSport } from "@/services/odds/odds.service";
+import { getLiveEvents } from "@/services/odds/odds.service";
 import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 import { DemoModeBanner } from "@/components/shared/DemoModeBanner";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 5; // Fast revalidation for live betting
 
 export default async function LiveBettingPage() {
-  const { events, demoMode } = await getEventsForSport("live");
+  const { events, demoMode } = await getLiveEvents();
   const liveEvents = events.filter((e) => e.isLive);
 
   return (
