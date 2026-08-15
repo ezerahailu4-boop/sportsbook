@@ -7,6 +7,7 @@ import { normalizeEvents, type NormalizedEvent } from "./odds-normalizer";
 import { validateEvent } from "./odds-validator";
 import { getCachedEvents, cacheEvents, getCachedSports, cacheSports } from "./odds-cache";
 import { getMockEvents, isDemoMode } from "./mock-odds-provider";
+import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 import type { OddsApiSport } from "./odds-api-types";
 
 export interface OddsResult {
@@ -14,13 +15,19 @@ export interface OddsResult {
   demoMode: boolean;
 }
 
+const DEFAULT_DEMO_SPORTS: OddsApiSport[] = SPORTS_CATEGORIES.map((c) => ({
+  key: c.key,
+  group: c.sportGroup,
+  title: c.name,
+  description: `${c.name} (${c.country})`,
+  active: true,
+  has_outrights: false,
+}));
+
 export async function getSports(): Promise<{ sports: OddsApiSport[]; demoMode: boolean }> {
   if (isDemoMode()) {
     return {
-      sports: [
-        { key: "soccer_epl", group: "Soccer", title: "EPL", description: "English Premier League", active: true, has_outrights: false },
-        { key: "basketball_nba", group: "Basketball", title: "NBA", description: "US Basketball", active: true, has_outrights: false },
-      ],
+      sports: DEFAULT_DEMO_SPORTS,
       demoMode: true,
     };
   }
@@ -35,10 +42,7 @@ export async function getSports(): Promise<{ sports: OddsApiSport[]; demoMode: b
   } catch (err) {
     console.error("Failed to fetch sports from API, falling back to demo sports:", (err as Error).message);
     return {
-      sports: [
-        { key: "soccer_epl", group: "Soccer", title: "EPL", description: "English Premier League", active: true, has_outrights: false },
-        { key: "basketball_nba", group: "Basketball", title: "NBA", description: "US Basketball", active: true, has_outrights: false },
-      ],
+      sports: DEFAULT_DEMO_SPORTS,
       demoMode: true,
     };
   }
@@ -81,7 +85,18 @@ export async function getLiveEvents(): Promise<OddsResult> {
     return { events: getMockEvents("live"), demoMode: true };
   }
 
-  const sports = ["soccer_epl", "soccer_spain_la_liga", "basketball_nba"];
+  const sports = [
+    "soccer_epl",
+    "soccer_spain_la_liga",
+    "soccer_germany_bundesliga",
+    "soccer_usa_mls",
+    "basketball_nba",
+    "tennis_atp",
+    "baseball_mlb",
+    "icehockey_nhl",
+    "cricket_ipl",
+  ];
+  
   const allEvents: NormalizedEvent[] = [];
   let anyDemo = false;
 

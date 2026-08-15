@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Clock, Flame, Shield, Radio } from "lucide-react";
 import { getEventsForSport } from "@/services/odds/odds.service";
+import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 import { MarketCard } from "@/components/betting/MarketCard";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
@@ -16,20 +17,18 @@ export default async function MatchDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-  const sports = [
-    "soccer_epl",
-    "soccer_spain_la_liga",
-    "soccer_uefa_champs_league",
-    "basketball_nba",
-    "tennis_atp",
-    "mma_mixed_martial_arts",
-    "americanfootball_nfl",
-  ];
+  
+  // Extract candidate sports
+  const allSportKeys = SPORTS_CATEGORIES.map((c) => c.key);
+  const matchedSportKey = allSportKeys.find((k) => eventId.includes(k));
+  const candidateSports = matchedSportKey
+    ? [matchedSportKey, ...allSportKeys.filter((k) => k !== matchedSportKey)]
+    : allSportKeys;
 
   let foundEvent = null;
   let isDemo = true;
 
-  for (const s of sports) {
+  for (const s of candidateSports) {
     const { events, demoMode } = await getEventsForSport(s);
     isDemo = demoMode;
     const match = events.find((e) => e.externalId === eventId);

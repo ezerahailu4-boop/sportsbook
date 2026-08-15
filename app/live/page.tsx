@@ -1,6 +1,6 @@
-import { Flame, Radio, RefreshCw } from "lucide-react";
+import { Flame, Radio } from "lucide-react";
 import { getLiveEvents } from "@/services/odds/odds.service";
-import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
+import { LiveMatchCenter } from "@/components/betting/LiveMatchCenter";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 import { DemoModeBanner } from "@/components/shared/DemoModeBanner";
@@ -32,32 +32,21 @@ export default async function LiveBettingPage() {
                 <h1 className="text-lg font-black text-white flex items-center gap-2">
                   <span>Live In-Play Arena</span>
                   <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-400">
-                    {liveEvents.length} Active
+                    {liveEvents.length} Active Worldwide
                   </span>
                 </h1>
-                <p className="text-xs text-slate-400">Real-time match trackers, momentum and shifting odds</p>
+                <p className="text-xs text-slate-400">Real-time match trackers, shifting momentum and multi-market odds</p>
               </div>
             </div>
 
             <div className="flex items-center gap-2 text-xs text-slate-400">
               <Radio className="h-3.5 w-3.5 text-red-500 animate-ping" />
-              <span className="hidden sm:inline">Auto-Syncing</span>
+              <span className="hidden sm:inline">Live Radar Sync</span>
             </div>
           </div>
 
-          {/* Matches Grid */}
-          {liveEvents.length === 0 ? (
-            <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-12 text-center text-slate-500">
-              <p className="text-sm font-semibold text-slate-300">No live matches in progress right now.</p>
-              <p className="text-xs text-slate-500 mt-1">Check back soon or explore upcoming fixtures in the Sports section.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              {liveEvents.map((event) => (
-                <LiveMatchCard key={event.externalId} event={event} />
-              ))}
-            </div>
-          )}
+          {/* Interactive Live Matches Center with Sport Filters */}
+          <LiveMatchCenter events={liveEvents} />
 
         </div>
 

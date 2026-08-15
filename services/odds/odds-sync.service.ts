@@ -8,7 +8,16 @@ import type { NormalizedEvent } from "./odds-normalizer";
 
 // Sports actively tracked by the sync job. In production this should come
 // from an admin-configurable table rather than a hardcoded list.
-const CONFIGURED_SPORT_KEYS = ["soccer_epl", "basketball_nba"];
+const CONFIGURED_SPORT_KEYS = [
+  "soccer_epl",
+  "soccer_spain_la_liga",
+  "soccer_germany_bundesliga",
+  "basketball_nba",
+  "tennis_atp",
+  "americanfootball_nfl",
+  "baseball_mlb",
+  "icehockey_nhl",
+];
 
 export interface SyncSummary {
   sportKey: string;

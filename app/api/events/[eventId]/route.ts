@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getEventsForSport } from "@/services/odds/odds.service";
+import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 
 export async function GET(
   _req: Request,
@@ -7,8 +8,13 @@ export async function GET(
 ) {
   try {
     const { eventId } = await params;
-    // Search across all sports
-    const sports = ["soccer_epl", "soccer_spain_la_liga", "basketball_nba", "tennis_atp", "mma_mixed_martial_arts", "americanfootball_nfl"];
+    // Search candidate sports prioritizing matched key
+    const allSportKeys = SPORTS_CATEGORIES.map((c) => c.key);
+    const matchedSportKey = allSportKeys.find((k) => eventId.includes(k));
+    const sports = matchedSportKey
+      ? [matchedSportKey, ...allSportKeys.filter((k) => k !== matchedSportKey)]
+      : allSportKeys;
+
     let foundEvent = null;
     let isDemo = false;
 

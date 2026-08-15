@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getEventsForSport } from "@/services/odds/odds.service";
+import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -14,7 +15,7 @@ export async function GET(req: Request) {
     });
   }
 
-  const sports = ["soccer_epl", "soccer_spain_la_liga", "soccer_uefa_champs_league", "basketball_nba", "tennis_atp", "mma_mixed_martial_arts", "americanfootball_nfl"];
+  const sports = SPORTS_CATEGORIES.map((c) => c.key);
   const allEvents = [];
 
   for (const s of sports) {
