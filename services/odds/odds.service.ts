@@ -61,7 +61,7 @@ export async function getEventsForSport(sportKey: string): Promise<OddsResult> {
   if (cached) return { events: cached, demoMode: false };
 
   try {
-    const raw = await oddsApi.fetchOdds(sportKey, { regions: "eu,uk,us", markets: "h2h,spreads,totals" });
+    const raw = await oddsApi.fetchOdds(sportKey, { regions: "eu,us", markets: "h2h" });
     const normalized = normalizeEvents(raw);
 
     const valid = normalized.filter((e) => {
