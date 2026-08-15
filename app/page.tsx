@@ -10,7 +10,7 @@ import {
   Activity,
   Zap
 } from "lucide-react";
-import { getEventsForSport } from "@/services/odds/odds.service";
+import { getEventsForSport, getLiveEvents } from "@/services/odds/odds.service";
 import { MatchCard } from "@/components/betting/MatchCard";
 import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
 import { BetSlip } from "@/components/betting/BetSlip";
@@ -24,7 +24,7 @@ export default async function HomePage() {
   // Fetch popular matches
   const { events: eplEvents, demoMode } = await getEventsForSport("soccer_epl");
   const { events: nbaEvents } = await getEventsForSport("basketball_nba");
-  const { events: liveEvents } = await getEventsForSport("live");
+  const { events: liveEvents } = await getLiveEvents();
 
   const activeLiveEvents = liveEvents.filter((e) => e.isLive);
   const featuredMatch = eplEvents[0] ?? null;

@@ -28,12 +28,27 @@ export async function getSports(): Promise<{ sports: OddsApiSport[]; demoMode: b
   const cached = await getCachedSports<OddsApiSport>();
   if (cached) return { sports: cached, demoMode: false };
 
-  const sports = await oddsApi.fetchSports();
-  await cacheSports(sports);
-  return { sports, demoMode: false };
+  try {
+    const sports = await oddsApi.fetchSports();
+    await cacheSports(sports);
+    return { sports, demoMode: false };
+  } catch (err) {
+    console.error("Failed to fetch sports from API, falling back to demo sports:", (err as Error).message);
+    return {
+      sports: [
+        { key: "soccer_epl", group: "Soccer", title: "EPL", description: "English Premier League", active: true, has_outrights: false },
+        { key: "basketball_nba", group: "Basketball", title: "NBA", description: "US Basketball", active: true, has_outrights: false },
+      ],
+      demoMode: true,
+    };
+  }
 }
 
 export async function getEventsForSport(sportKey: string): Promise<OddsResult> {
+  if (sportKey === "live") {
+    return getLiveEvents();
+  }
+
   if (isDemoMode()) {
     return { events: getMockEvents(sportKey), demoMode: true };
   }
@@ -41,19 +56,24 @@ export async function getEventsForSport(sportKey: string): Promise<OddsResult> {
   const cached = await getCachedEvents(sportKey);
   if (cached) return { events: cached, demoMode: false };
 
-  const raw = await oddsApi.fetchOdds(sportKey, { regions: "eu,uk,us", markets: "h2h,spreads,totals" });
-  const normalized = normalizeEvents(raw);
+  try {
+    const raw = await oddsApi.fetchOdds(sportKey, { regions: "eu,uk,us", markets: "h2h,spreads,totals" });
+    const normalized = normalizeEvents(raw);
 
-  const valid = normalized.filter((e) => {
-    const result = validateEvent(e);
-    if (!result.valid) {
-      console.error(`Dropping malformed event ${e.externalId}:`, result.errors);
-    }
-    return result.valid;
-  });
+    const valid = normalized.filter((e) => {
+      const result = validateEvent(e);
+      if (!result.valid) {
+        console.error(`Dropping malformed event ${e.externalId}:`, result.errors);
+      }
+      return result.valid;
+    });
 
-  await cacheEvents(sportKey, valid);
-  return { events: valid, demoMode: false };
+    await cacheEvents(sportKey, valid);
+    return { events: valid, demoMode: false };
+  } catch (err) {
+    console.error(`Failed to fetch odds for ${sportKey} from API, falling back to mock provider:`, (err as Error).message);
+    return { events: getMockEvents(sportKey), demoMode: true };
+  }
 }
 
 export async function getLiveEvents(): Promise<OddsResult> {

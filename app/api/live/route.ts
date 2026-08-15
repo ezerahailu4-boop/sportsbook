@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getEventsForSport } from "@/services/odds/odds.service";
+import { getLiveEvents } from "@/services/odds/odds.service";
 
 export async function GET() {
   try {
-    const { events, demoMode } = await getEventsForSport("live");
+    const { events, demoMode } = await getLiveEvents();
     const liveEvents = events.filter((e) => e.isLive);
 
     return NextResponse.json({
