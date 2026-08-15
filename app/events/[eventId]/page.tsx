@@ -6,7 +6,7 @@ import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 import { MarketCard } from "@/components/betting/MarketCard";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
-import { DemoModeBanner } from "@/components/shared/DemoModeBanner";
+
 import { ageInSeconds } from "@/services/odds/odds-cache";
 
 export const revalidate = 10;
@@ -26,11 +26,10 @@ export default async function MatchDetailsPage({
     : allSportKeys;
 
   let foundEvent = null;
-  let isDemo = true;
+
 
   for (const s of candidateSports) {
-    const { events, demoMode } = await getEventsForSport(s);
-    isDemo = demoMode;
+    const { events } = await getEventsForSport(s);
     const match = events.find((e) => e.externalId === eventId);
     if (match) {
       foundEvent = match;
@@ -53,7 +52,7 @@ export default async function MatchDetailsPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <DemoModeBanner active={isDemo} />
+
 
       <div className="flex gap-6 mt-4">
         <Sidebar />

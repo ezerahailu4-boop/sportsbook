@@ -15,14 +15,14 @@ import { MatchCard } from "@/components/betting/MatchCard";
 import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
-import { DemoModeBanner } from "@/components/shared/DemoModeBanner";
+
 import { ageInSeconds } from "@/services/odds/odds-cache";
 
 export const revalidate = 15; // Revalidate dynamic fixtures every 15 seconds
 
 export default async function HomePage() {
   // Fetch popular matches
-  const { events: eplEvents, demoMode } = await getEventsForSport("soccer_epl");
+  const { events: eplEvents } = await getEventsForSport("soccer_epl");
   const { events: nbaEvents } = await getEventsForSport("basketball_nba");
   const { events: liveEvents } = await getLiveEvents();
 
@@ -32,9 +32,6 @@ export default async function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
-      {/* Demo Mode Notice */}
-      <DemoModeBanner active={demoMode} />
-
       <div className="flex gap-6 mt-4">
         
         {/* Left Navigation Sidebar */}
@@ -51,19 +48,23 @@ export default async function HomePage() {
               <div className="flex flex-col gap-2 max-w-lg">
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
-                    <Sparkles className="h-3 w-3 mr-1" /> Featured Super Derby
+                    <Sparkles className="h-3 w-3 mr-1" /> Featured Match
                   </span>
-                  <span className="text-xs text-slate-400">Premier League</span>
+                  <span className="text-xs text-slate-400">{featuredMatch?.league ?? "Premier League"}</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  Manchester City <span className="text-emerald-400 font-normal">vs</span> Liverpool
+                  {featuredMatch ? (
+                    <>{featuredMatch.homeTeam} <span className="text-emerald-400 font-normal">vs</span> {featuredMatch.awayTeam}</>
+                  ) : (
+                    <>Top Matches <span className="text-emerald-400 font-normal">Today</span></>
+                  )}
                 </h1>
                 <p className="text-xs text-slate-300">
                   Live odds with enhanced Accumulator Boost up to 50% extra winnings on 4+ legs.
                 </p>
                 <div className="flex items-center gap-3 mt-2">
                   <Link
-                    href="/events/demo-soccer_epl-0"
+                    href={featuredMatch ? `/events/${featuredMatch.externalId}` : "/sports/soccer_epl"}
                     className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/20 hover:brightness-110 transition"
                   >
                     <span>View Match Markets</span>
@@ -231,7 +232,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="border-t border-slate-800/80 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-slate-500">
-              <p>© 2026 ApexBet Sportsbook Prototype. Authoritative Server Architecture.</p>
+              <p>© 2026 ApexBet Sportsbook. All rights reserved. Licensed & Regulated.</p>
               <div className="flex gap-4">
                 <Link href="/responsible-gambling" className="hover:text-slate-300">Responsible Gaming</Link>
                 <Link href="/promotions" className="hover:text-slate-300">Promotion Terms</Link>

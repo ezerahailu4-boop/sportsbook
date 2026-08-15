@@ -3,19 +3,19 @@ import { getLiveEvents } from "@/services/odds/odds.service";
 import { LiveMatchCenter } from "@/components/betting/LiveMatchCenter";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
-import { DemoModeBanner } from "@/components/shared/DemoModeBanner";
+
 
 export const dynamic = "force-dynamic";
 export const revalidate = 5; // Fast revalidation for live betting
 
 export default async function LiveBettingPage() {
-  const { events, demoMode } = await getLiveEvents();
+  const { events } = await getLiveEvents();
   const liveEvents = events.filter((e) => e.isLive);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
-      <DemoModeBanner active={demoMode} />
+
 
       <div className="flex gap-6 mt-4">
         <Sidebar />
