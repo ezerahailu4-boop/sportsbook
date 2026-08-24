@@ -16,6 +16,7 @@ import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
 import { SuperHeroBanner } from "@/components/betting/SuperHeroBanner";
 import { TopLeaguesBar } from "@/components/betting/TopLeaguesBar";
 import { BigMatchesShowcase } from "@/components/betting/BigMatchesShowcase";
+import { MultiLeagueMatchLobby } from "@/components/betting/MultiLeagueMatchLobby";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 
@@ -25,12 +26,30 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0; // Fresh fixtures on every request
 
 export default async function HomePage() {
-  // Fetch popular matches
-  const { events: eplEvents } = await getEventsForSport("soccer_epl");
-  const { events: laLigaEvents } = await getEventsForSport("soccer_spain_la_liga");
-  const { events: championsEvents } = await getEventsForSport("soccer_uefa_champs_league");
-  const { events: nbaEvents } = await getEventsForSport("basketball_nba");
-  const { events: liveEvents } = await getLiveEvents();
+  // Fetch real matches across all global leagues in parallel
+  const [
+    { events: eplEvents },
+    { events: laLigaEvents },
+    { events: championsEvents },
+    { events: serieAEvents },
+    { events: bundesligaEvents },
+    { events: ligue1Events },
+    { events: saudiEvents },
+    { events: mlsEvents },
+    { events: eredivisieEvents },
+    { events: liveEvents },
+  ] = await Promise.all([
+    getEventsForSport("soccer_epl"),
+    getEventsForSport("soccer_spain_la_liga"),
+    getEventsForSport("soccer_uefa_champs_league"),
+    getEventsForSport("soccer_italy_serie_a"),
+    getEventsForSport("soccer_germany_bundesliga"),
+    getEventsForSport("soccer_france_ligue_one"),
+    getEventsForSport("soccer_saudi_arabia_pro_league"),
+    getEventsForSport("soccer_usa_mls"),
+    getEventsForSport("soccer_netherlands_eredivisie"),
+    getLiveEvents(),
+  ]);
 
   const activeLiveEvents = liveEvents.filter((e) => e.isLive);
   const featuredMatches = [
@@ -40,13 +59,25 @@ export default async function HomePage() {
   ];
 
   const topRealMatches = [
-    ...eplEvents.slice(0, 3),
+    ...eplEvents.slice(0, 2),
     ...laLigaEvents.slice(0, 2),
     ...championsEvents.slice(0, 2),
   ];
 
+  const leagueGroups = [
+    { id: "soccer_epl", name: "Premier League", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", events: eplEvents },
+    { id: "soccer_uefa_champs_league", name: "Champions League", flag: "🏆", events: championsEvents },
+    { id: "soccer_spain_la_liga", name: "La Liga", flag: "🇪🇸", events: laLigaEvents },
+    { id: "soccer_italy_serie_a", name: "Serie A", flag: "🇮🇹", events: serieAEvents },
+    { id: "soccer_germany_bundesliga", name: "Bundesliga", flag: "🇩🇪", events: bundesligaEvents },
+    { id: "soccer_france_ligue_one", name: "Ligue 1", flag: "🇫🇷", events: ligue1Events },
+    { id: "soccer_saudi_arabia_pro_league", name: "Saudi Pro League", flag: "🇸🇦", events: saudiEvents },
+    { id: "soccer_usa_mls", name: "MLS", flag: "🇺🇸", events: mlsEvents },
+    { id: "soccer_netherlands_eredivisie", name: "Eredivisie", flag: "🇳🇱", events: eredivisieEvents },
+  ].filter((g) => g.events.length > 0);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12">
       
       <div className="flex gap-6 mt-4">
         
@@ -62,7 +93,7 @@ export default async function HomePage() {
           {/* Super Match of the Day Epic Hero Banner */}
           <SuperHeroBanner featuredEvents={featuredMatches} />
 
-          {/* Today & Weekend Big Matches Visual Gallery (100% Real Live Matches) */}
+          {/* Today & Weekend Big Matches Visual Gallery */}
           <BigMatchesShowcase events={topRealMatches} />
 
           {/* In-Play Live Now Section */}
@@ -90,112 +121,8 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Premier League & Top Football */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-emerald-400" />
-                <h2 className="text-base font-bold text-white">Premier League Fixtures</h2>
-              </div>
-              <Link
-                href="/sports/soccer_epl"
-                className="flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:underline"
-              >
-                <span>All Premier League</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              {eplEvents.map((event) => {
-                const mainMarket = event.markets.find((m) => m.key === "h2h") ?? event.markets[0] ?? null;
-                return (
-                    <MatchCard
-                      key={event.externalId}
-                      eventId={event.externalId}
-                      league={event.league}
-                      homeTeam={event.homeTeam}
-                      awayTeam={event.awayTeam}
-                      commenceTime={event.commenceTime}
-                      isLive={event.isLive}
-                      liveMinute={event.liveMinute}
-                      score={event.score}
-                      marketCount={event.markets.length}
-                      lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
-                    mainMarket={
-                      mainMarket
-                        ? {
-                            key: mainMarket.key,
-                            name: mainMarket.name,
-                            bookmakerKey: mainMarket.bookmakerKey,
-                            outcomes: mainMarket.outcomes.map((o) => ({
-                              outcomeId: o.externalId,
-                              name: o.name,
-                              price: o.price,
-                              point: o.point,
-                            })),
-                          }
-                        : null
-                    }
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          {/* NBA Basketball Matches */}
-          {nbaEvents.length > 0 && (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-amber-400" />
-                  <h2 className="text-base font-bold text-white">NBA Basketball</h2>
-                </div>
-                <Link
-                  href="/sports/basketball_nba"
-                  className="flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:underline"
-                >
-                  <span>All NBA Matches</span>
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="flex flex-col gap-2.5">
-                {nbaEvents.map((event) => {
-                  const mainMarket = event.markets.find((m) => m.key === "h2h") ?? event.markets[0] ?? null;
-                  return (
-                    <MatchCard
-                      key={event.externalId}
-                      eventId={event.externalId}
-                      league={event.league}
-                      homeTeam={event.homeTeam}
-                      awayTeam={event.awayTeam}
-                      commenceTime={event.commenceTime}
-                      isLive={event.isLive}
-                      liveMinute={event.liveMinute}
-                      score={event.score}
-                      lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
-                      mainMarket={
-                        mainMarket
-                          ? {
-                              key: mainMarket.key,
-                              name: mainMarket.name,
-                              bookmakerKey: mainMarket.bookmakerKey,
-                              outcomes: mainMarket.outcomes.map((o) => ({
-                                outcomeId: o.externalId,
-                                name: o.name,
-                                price: o.price,
-                                point: o.point,
-                              })),
-                            }
-                          : null
-                      }
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          {/* Comprehensive 200+ Multi-League Global Match Lobby */}
+          <MultiLeagueMatchLobby leagueGroups={leagueGroups} />
 
           {/* Footer Responsible Gaming & Compliance Info */}
           <footer className="mt-8 rounded-2xl bg-slate-900/60 border border-slate-800 p-6 flex flex-col gap-4 text-slate-400 text-xs">
