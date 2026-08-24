@@ -34,6 +34,23 @@ export function Sidebar() {
         </h3>
         <div className="flex flex-col gap-0.5 mt-1">
           <Link
+            href="/today"
+            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition ${
+              pathname === "/today"
+                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20"
+                : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm">📅</span>
+              <span>Today's Games</span>
+            </div>
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+              TODAY
+            </span>
+          </Link>
+
+          <Link
             href="/live"
             className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition ${
               pathname === "/live"
@@ -46,7 +63,7 @@ export function Sidebar() {
               <span>Live In-Play</span>
             </div>
             <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-400 animate-pulse">
-              8 LIVE
+              LIVE
             </span>
           </Link>
 

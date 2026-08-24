@@ -16,7 +16,8 @@ import {
   LogOut, 
   History, 
   Settings,
-  ChevronDown
+  ChevronDown,
+  Calendar
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { apiFetch } from "@/lib/api-client";
@@ -73,10 +74,10 @@ export function Header() {
   };
 
   const navLinks = [
-    { label: "Sports", href: "/sports", icon: Trophy },
+    { label: "Today's Games", href: "/today", icon: Calendar },
     { label: "Live In-Play", href: "/live", icon: Flame, isLive: true },
+    { label: "All Sports", href: "/sports", icon: Trophy },
     { label: "Promotions", href: "/promotions", icon: Gift },
-    { label: "Responsible Play", href: "/responsible-gambling", icon: ShieldCheck },
   ];
 
   return (
