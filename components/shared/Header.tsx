@@ -85,17 +85,17 @@ export function Header() {
         
         {/* Brand Logo & Main Nav */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <img
               src="/logo.png"
               alt="ApexBet Logo"
-              className="h-10 w-10 rounded-xl object-cover border border-emerald-500/30 shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform"
+              className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl object-cover border border-emerald-500/30 shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform"
             />
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-wider text-white">
+              <span className="text-base sm:text-lg font-black tracking-wider text-white">
                 APEX<span className="text-emerald-400">BET</span>
               </span>
-              <span className="text-[9px] font-bold tracking-widest text-emerald-500/90 -mt-1 uppercase">
+              <span className="hidden sm:inline text-[9px] font-bold tracking-widest text-emerald-500/90 -mt-1 uppercase">
                 World-Class Sportsbook
               </span>
             </div>

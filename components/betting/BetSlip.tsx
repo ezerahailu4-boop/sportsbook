@@ -354,8 +354,9 @@ export function BetSlip() {
 
       {/* Mobile Drawer (Bottom Sheet) */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/80 backdrop-blur-sm lg:hidden animate-in fade-in duration-200">
-          <div className="w-full max-h-[85vh] rounded-t-3xl bg-slate-900 border-t border-slate-800 shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-200">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/85 backdrop-blur-md lg:hidden animate-in fade-in duration-200">
+          <div className="w-full max-h-[88vh] rounded-t-3xl bg-slate-900 border-t border-slate-700/80 shadow-2xl overflow-y-auto animate-in slide-in-from-bottom duration-250 flex flex-col">
+            <div className="w-12 h-1.5 rounded-full bg-slate-700 mx-auto mt-2.5 mb-1 shrink-0" />
             {content}
           </div>
         </div>
