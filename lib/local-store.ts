@@ -89,6 +89,21 @@ export interface StoredPlacedBet {
   }>;
 }
 
+export interface StoredWithdrawal {
+  id: string;
+  userId: string;
+  userEmail: string;
+  amount: number;
+  currency: string;
+  method: string;
+  accountNumber: string;
+  accountName?: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  requestedAt: string;
+  processedAt?: string;
+  notes?: string;
+}
+
 export interface PlatformSettings {
   telebirrNumber: string;
   cbeAccountNumber: string;
@@ -104,6 +119,7 @@ interface LocalDatabase {
   wallets: StoredWallet[];
   sessions: StoredSession[];
   deposits: StoredDeposit[];
+  withdrawals: StoredWithdrawal[];
   customMatches: StoredCustomMatch[];
   bets: StoredPlacedBet[];
   settings: PlatformSettings;
@@ -199,6 +215,7 @@ function loadDb(): LocalDatabase {
         createdAt: new Date().toISOString(),
       },
     ],
+    withdrawals: [],
     customMatches: [
       {
         id: "cust_match_1",
@@ -552,5 +569,75 @@ export const localDb = {
     const db = loadDb();
     db.sessions = db.sessions.filter((s) => s.userId !== userId);
     saveDb();
+  },
+
+  createWithdrawal(data: {
+    userId: string;
+    amount: number;
+    currency?: string;
+    method: string;
+    accountNumber: string;
+    accountName?: string;
+  }): { success: boolean; withdrawalId?: string; error?: string } {
+    const db = loadDb();
+    if (!db.withdrawals) db.withdrawals = [];
+    const wallet = db.wallets.find((w) => w.userId === data.userId && w.mode === "REAL");
+    if (!wallet) return { success: false, error: "Wallet not found" };
+    if (wallet.availableBalance < data.amount) return { success: false, error: "Insufficient available balance" };
+
+    const user = db.users.find((u) => u.id === data.userId);
+    wallet.availableBalance -= data.amount;
+
+    const withdrawal: StoredWithdrawal = {
+      id: "wd_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+      userId: data.userId,
+      userEmail: user?.email || data.userId,
+      amount: data.amount,
+      currency: data.currency || "ETB",
+      method: data.method,
+      accountNumber: data.accountNumber,
+      accountName: data.accountName || `${user?.firstName || ""} ${user?.lastName || ""}`.trim(),
+      status: "PENDING",
+      requestedAt: new Date().toISOString(),
+    };
+
+    db.withdrawals.unshift(withdrawal);
+    saveDb();
+    return { success: true, withdrawalId: withdrawal.id };
+  },
+
+  getAllWithdrawals(): StoredWithdrawal[] {
+    const db = loadDb();
+    return db.withdrawals || [];
+  },
+
+  processWithdrawal(id: string, action: "APPROVE" | "REJECT", notes?: string): { success: boolean; message: string } {
+    const db = loadDb();
+    if (!db.withdrawals) db.withdrawals = [];
+    const w = db.withdrawals.find((item) => item.id === id);
+    if (!w) return { success: false, message: "Withdrawal not found" };
+    if (w.status !== "PENDING") return { success: false, message: "Withdrawal already processed" };
+
+    const wallet = db.wallets.find((item) => item.userId === w.userId && item.mode === "REAL");
+
+    if (action === "APPROVE") {
+      w.status = "APPROVED";
+      w.processedAt = new Date().toISOString();
+      w.notes = notes || "Payout transferred via " + w.method;
+      if (wallet) {
+        wallet.totalWithdrawn = (wallet.totalWithdrawn || 0) + w.amount;
+      }
+      saveDb();
+      return { success: true, message: `Withdrawal of ${w.amount} ETB marked as PAID to ${w.accountNumber}` };
+    } else {
+      w.status = "REJECTED";
+      w.processedAt = new Date().toISOString();
+      w.notes = notes || "Rejected and refunded to wallet";
+      if (wallet) {
+        wallet.availableBalance += w.amount;
+      }
+      saveDb();
+      return { success: true, message: `Withdrawal rejected and ${w.amount} ETB refunded to user wallet` };
+    }
   },
 };

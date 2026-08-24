@@ -8,8 +8,9 @@ import { apiFetch, ApiError } from "@/lib/api-client";
 export function WithdrawModal() {
   const { isWithdrawModalOpen, closeWithdrawModal, user, setUser } = useAuthStore();
   const [amount, setAmount] = useState("500");
-  const [method, setMethod] = useState("mock_telebirr");
-  const [accountNumber, setAccountNumber] = useState(user?.phone ?? "+251911223344");
+  const [method, setMethod] = useState<"telebirr" | "cbe">("telebirr");
+  const [accountName, setAccountName] = useState(user ? `${user.firstName} ${user.lastName}`.trim() : "");
+  const [accountNumber, setAccountNumber] = useState(user?.phone ?? "0911000000");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -31,7 +32,6 @@ export function WithdrawModal() {
     }
 
     try {
-      const idempotencyKey = crypto.randomUUID();
       await apiFetch("/api/wallet/withdraw", {
         method: "POST",
         body: JSON.stringify({
@@ -39,7 +39,7 @@ export function WithdrawModal() {
           currency: "ETB",
           method,
           accountNumber,
-          idempotencyKey,
+          accountName,
         }),
       });
 
@@ -120,13 +120,13 @@ export function WithdrawModal() {
                 <label className="text-[11px] font-semibold text-slate-300">Destination Account</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: "mock_telebirr", name: "Telebirr Payout", icon: "📱" },
-                    { id: "mock_cbebirr", name: "CBE Birr Payout", icon: "🏦" },
+                    { id: "telebirr", name: "Telebirr Payout", icon: "📱" },
+                    { id: "cbe", name: "CBE Bank Transfer", icon: "🏦" },
                   ].map((p) => (
                     <button
                       key={p.id}
                       type="button"
-                      onClick={() => setMethod(p.id)}
+                      onClick={() => setMethod(p.id as any)}
                       className={`flex items-center gap-2 rounded-xl p-2.5 text-left text-xs transition border ${
                         method === p.id
                           ? "bg-amber-500/10 border-amber-500/40 text-amber-300 font-semibold"
@@ -140,15 +140,31 @@ export function WithdrawModal() {
                 </div>
               </div>
 
-              {/* Phone / Account Number */}
+              {/* Account Holder Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-semibold text-slate-300">Account / Mobile Number</label>
+                <label className="text-[11px] font-semibold text-slate-300">Account Holder Full Name</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Abebe Bekele"
+                  value={accountName}
+                  onChange={(e) => setAccountName(e.target.value)}
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 py-2 px-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              {/* Phone / Account Number */}
+              <div className="flex flex-col gap-1">
+                <label className="text-[11px] font-semibold text-slate-300">
+                  {method === "telebirr" ? "Telebirr Phone Number (09...)" : "CBE Account Number (1000...)"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder={method === "telebirr" ? "0911223344" : "1000400846271"}
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value)}
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 py-2 px-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 py-2 px-3 text-xs text-white focus:border-amber-500 focus:outline-none font-mono"
                 />
               </div>
 
