@@ -542,9 +542,11 @@ export default function WorldClassAdminDashboard() {
         <div className="absolute top-0 right-1/4 w-72 h-32 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-lg shadow-amber-500/10">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="ApexBet Trading Floor Logo"
+            className="h-12 w-12 rounded-2xl object-cover border border-amber-500/40 shadow-lg shadow-amber-500/20"
+          />
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-lg font-black text-white tracking-tight">ApexBet Trading Floor</h1>
