@@ -188,7 +188,7 @@ export function BetSlip() {
                   onClick={openDepositModal}
                   className="mt-1 rounded-lg bg-red-500/20 text-red-200 px-2 py-1 text-[10px] font-bold text-left hover:bg-red-500/30"
                 >
-                  + Deposit Demo Funds
+                  + Deposit Funds
                 </button>
               )}
             </div>

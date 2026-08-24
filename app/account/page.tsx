@@ -106,13 +106,13 @@ export default function AccountPage() {
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed">
-          In production environments, real-money wagering and withdrawal requests require formal government ID and proof of address verification. In Demo Mode, you can test the verification state machine with the button below.
+          Verify your identity to unlock instant Telebirr & CBE withdrawals and higher deposit limits.
         </p>
 
         {kycSuccess && (
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-xs text-emerald-300">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>Identity verified successfully! Real-money withdrawal capabilities unlocked.</span>
+            <span>Identity verified successfully! Instant withdrawal capabilities unlocked.</span>
           </div>
         )}
 
@@ -123,7 +123,7 @@ export default function AccountPage() {
               disabled={submittingKyc}
               className="rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 text-xs font-bold transition disabled:opacity-50"
             >
-              {submittingKyc ? "Verifying..." : "Simulate Instant KYC Verification"}
+              {submittingKyc ? "Verifying..." : "Verify Identity & Unlock Withdrawals"}
             </button>
           </div>
         )}

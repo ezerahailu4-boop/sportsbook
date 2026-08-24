@@ -69,7 +69,7 @@ export function WithdrawModal() {
             </div>
             <div>
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">Withdraw Funds</h3>
-              <p className="text-[10px] text-slate-400">Demo Wallet Payout Simulator</p>
+              <p className="text-[10px] text-slate-400">Fast Bank & Mobile Money Payout</p>
             </div>
           </div>
           <button
@@ -89,7 +89,7 @@ export function WithdrawModal() {
               </div>
               <h4 className="text-base font-bold text-white">Withdrawal Processed!</h4>
               <p className="text-xs text-slate-400 mt-1 max-w-xs">
-                {Number(amount).toLocaleString()} ETB was deducted and recorded in your wallet ledger.
+                {Number(amount).toLocaleString()} ETB was deducted and queued for instant payout.
               </p>
               <button
                 onClick={closeWithdrawModal}
@@ -120,8 +120,8 @@ export function WithdrawModal() {
                 <label className="text-[11px] font-semibold text-slate-300">Destination Account</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: "mock_telebirr", name: "Telebirr (Demo)", icon: "📱" },
-                    { id: "mock_cbebirr", name: "CBE Birr (Demo)", icon: "🏦" },
+                    { id: "mock_telebirr", name: "Telebirr Payout", icon: "📱" },
+                    { id: "mock_cbebirr", name: "CBE Birr Payout", icon: "🏦" },
                   ].map((p) => (
                     <button
                       key={p.id}

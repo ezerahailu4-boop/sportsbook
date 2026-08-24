@@ -7,10 +7,10 @@ const PROMOTIONS = [
   {
     id: "welcome-match",
     badge: "New Players",
-    title: "100% Welcome Deposit Match up to 2,000 ETB",
-    description: "Double your first deposit with instant demo credits upon successful registration and verification.",
-    terms: "Minimum deposit 100 ETB. Valid for new registrations. 5x wagering requirement on sports selections with minimum odds of 1.50.",
-    action: "Claim Bonus",
+    title: "50 ETB Instant Welcome Bonus on Registration",
+    description: "Get an immediate 50 ETB free bet credit credited to your wallet balance instantly upon registration.",
+    terms: "Valid for all new player registrations. Can be used on any live or pre-match sports market with minimum odds of 1.20.",
+    action: "Register & Claim 50 ETB",
     color: "from-emerald-500/20 to-emerald-950/40",
   },
   {

@@ -38,6 +38,14 @@ export async function startDeposit(req: StartDepositRequest): Promise<StartDepos
     return { success: true, transactionId: existing.id };
   }
 
+  const user = await prisma.user.findUnique({ where: { id: req.userId } });
+  if (!user || user.status !== "ACTIVE") {
+    return { success: false, error: { code: "ACCOUNT_RESTRICTED", message: "Your account cannot deposit right now." } };
+  }
+  if (process.env.REAL_MONEY_ENABLED === "true" && user.kycStatus !== "VERIFIED") {
+    return { success: false, error: { code: "KYC_REQUIRED", message: "Identity verification (KYC) is required before depositing real money." } };
+  }
+
   const provider = getProvider();
   const providerResponse = await provider.createDeposit({
     userId: req.userId,

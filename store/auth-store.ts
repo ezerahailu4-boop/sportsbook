@@ -20,6 +20,7 @@ export interface UserProfile {
   status: "ACTIVE" | "SUSPENDED" | "SELF_EXCLUDED" | "RESTRICTED";
   kycStatus: "NOT_STARTED" | "PENDING" | "VERIFIED" | "REJECTED" | "EXPIRED";
   country: string;
+  emailVerified?: boolean;
   wallet: UserWallet | null;
 }
 
@@ -27,14 +28,14 @@ interface AuthStoreState {
   user: UserProfile | null;
   isLoading: boolean;
   isAuthModalOpen: boolean;
-  authModalTab: "login" | "register";
+  authModalTab: "login" | "register" | "forgot-password";
   isDepositModalOpen: boolean;
   isWithdrawModalOpen: boolean;
   isSearchModalOpen: boolean;
 
   setUser: (user: UserProfile | null) => void;
   setIsLoading: (isLoading: boolean) => void;
-  openAuthModal: (tab?: "login" | "register") => void;
+  openAuthModal: (tab?: "login" | "register" | "forgot-password") => void;
   closeAuthModal: () => void;
   openDepositModal: () => void;
   closeDepositModal: () => void;

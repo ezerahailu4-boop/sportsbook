@@ -29,7 +29,7 @@ export function OddsButton({
   commenceTime,
   layout = "vertical",
 }: OddsButtonProps) {
-  const { selections, addSelection, removeSelection } = useBetSlipStore();
+  const { selections, addSelection, removeSelection, setIsOpen } = useBetSlipStore();
   const isSelected = selections.some((s) => s.outcomeId === outcomeId);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -40,6 +40,8 @@ export function OddsButton({
       removeSelection(outcomeId);
       return;
     }
+
+    setIsOpen(true);
 
     const selection: BetSlipSelection = {
       eventId,

@@ -132,6 +132,8 @@ model User {
   auditLogs                  AuditLog[]           @relation("ActorAuditLogs")
   responsibleGamblingSetting ResponsibleGamblingSetting?
   favorites                  Favorite[]
+  emailVerificationTokens    EmailVerificationToken[]
+  passwordResetTokens        PasswordResetToken[]
 
   @@index([email])
   @@index([status])
@@ -450,4 +452,33 @@ model AuditLog {
 
   @@index([actorId])
   @@index([targetType, targetId])
+}
+
+// ---------- Auth Tokens ----------
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([token])
 }

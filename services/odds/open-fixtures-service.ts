@@ -175,25 +175,18 @@ export async function fetchOpenFixtures(sportKey: string): Promise<NormalizedEve
       const odds = calculateOdds(f.HomeTeam, f.AwayTeam, sportKey);
       const eventId = `open-${sportKey}-${f.MatchNumber || index}`;
       
-      // Group matches into:
-      // index 0..2: In-Play Live Now
-      // index 3..15: Today's upcoming games (+2h to +8h)
-      // index 16..40: Tomorrow and upcoming week (+24h to +72h)
-      const isLive = index < 2;
+      // All fixtures are upcoming scheduled games
+      const isLive = false;
       let matchDate: Date;
-      let liveMinute: string | undefined;
-      let score: string | undefined;
+      let liveMinute: string | undefined = undefined;
+      let score: string | undefined = undefined;
 
-      if (isLive) {
-        matchDate = new Date(currentBaseMs - (index === 0 ? 68 * 60 * 1000 : 34 * 60 * 1000));
-        liveMinute = index === 0 ? "68'" : "34'";
-        score = index === 0 ? "2 - 1" : "1 - 0";
-      } else if (index < 12) {
-        // Today's matches
-        matchDate = new Date(currentBaseMs + (index * 45 + 90) * 60 * 1000);
+      if (index < 10) {
+        // Today & tomorrow scheduled matches
+        matchDate = new Date(currentBaseMs + (index * 60 + 180) * 60 * 1000);
       } else {
-        // Next few days
-        matchDate = new Date(currentBaseMs + (index * 3 + 24) * 3600 * 1000);
+        // Upcoming days this week
+        matchDate = new Date(currentBaseMs + (index * 4 + 24) * 3600 * 1000);
       }
 
       const lastUpdated = now.toISOString();

@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Flame, Shield, Radio } from "lucide-react";
 import { getEventsForSport } from "@/services/odds/odds.service";
 import { SPORTS_CATEGORIES } from "@/lib/sports-constants";
 import { MarketCard } from "@/components/betting/MarketCard";
+import { EventMarketsView } from "@/components/betting/EventMarketsView";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 
@@ -126,22 +127,13 @@ export default async function MatchDetailsPage({
             </div>
           </div>
 
-          {/* Markets List */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 px-1">
-              Available Betting Markets
-            </h3>
-
-            {foundEvent.markets.map((market) => (
-              <MarketCard
-                key={market.key}
-                market={market}
-                eventId={foundEvent.externalId}
-                eventLabel={eventLabel}
-                commenceTime={foundEvent.commenceTime}
-              />
-            ))}
-          </div>
+          {/* Categorized Markets View */}
+          <EventMarketsView
+            markets={foundEvent.markets}
+            eventId={foundEvent.externalId}
+            eventLabel={eventLabel}
+            commenceTime={foundEvent.commenceTime}
+          />
 
         </div>
 

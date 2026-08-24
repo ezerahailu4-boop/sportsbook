@@ -40,17 +40,18 @@ export default async function SportPage({ params }: { params: Promise<{ sport: s
               {events.map((event) => {
                 const mainMarket = event.markets.find((m) => m.key === "h2h") ?? event.markets[0] ?? null;
                 return (
-                  <MatchCard
-                    key={event.externalId}
-                    eventId={event.externalId}
-                    league={event.league}
-                    homeTeam={event.homeTeam}
-                    awayTeam={event.awayTeam}
-                    commenceTime={event.commenceTime}
-                    isLive={event.isLive}
-                    liveMinute={event.liveMinute}
-                    score={event.score}
-                    lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
+                    <MatchCard
+                      key={event.externalId}
+                      eventId={event.externalId}
+                      league={event.league}
+                      homeTeam={event.homeTeam}
+                      awayTeam={event.awayTeam}
+                      commenceTime={event.commenceTime}
+                      isLive={event.isLive}
+                      liveMinute={event.liveMinute}
+                      score={event.score}
+                      marketCount={event.markets.length}
+                      lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
                     mainMarket={
                       mainMarket
                         ? {

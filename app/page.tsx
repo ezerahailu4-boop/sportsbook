@@ -18,7 +18,8 @@ import { Sidebar } from "@/components/shared/Sidebar";
 
 import { ageInSeconds } from "@/services/odds/odds-cache";
 
-export const revalidate = 15; // Revalidate dynamic fixtures every 15 seconds
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Fresh fixtures on every request
 
 export default async function HomePage() {
   // Fetch popular matches
@@ -134,17 +135,18 @@ export default async function HomePage() {
               {eplEvents.map((event) => {
                 const mainMarket = event.markets.find((m) => m.key === "h2h") ?? event.markets[0] ?? null;
                 return (
-                  <MatchCard
-                    key={event.externalId}
-                    eventId={event.externalId}
-                    league={event.league}
-                    homeTeam={event.homeTeam}
-                    awayTeam={event.awayTeam}
-                    commenceTime={event.commenceTime}
-                    isLive={event.isLive}
-                    liveMinute={event.liveMinute}
-                    score={event.score}
-                    lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
+                    <MatchCard
+                      key={event.externalId}
+                      eventId={event.externalId}
+                      league={event.league}
+                      homeTeam={event.homeTeam}
+                      awayTeam={event.awayTeam}
+                      commenceTime={event.commenceTime}
+                      isLive={event.isLive}
+                      liveMinute={event.liveMinute}
+                      score={event.score}
+                      marketCount={event.markets.length}
+                      lastUpdatedSecondsAgo={ageInSeconds(event.lastUpdated)}
                     mainMarket={
                       mainMarket
                         ? {

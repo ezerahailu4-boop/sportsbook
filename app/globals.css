@@ -73,3 +73,13 @@ body {
   font-weight: 700 !important;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
+
+/* Hide Next.js development indicator badge */
+nextjs-portal,
+#nextjs-dev-indicator,
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay],
+[data-nextjs-toast-wrapper] {
+  display: none !important;
+}
+

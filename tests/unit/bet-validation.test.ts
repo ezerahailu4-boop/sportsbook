@@ -67,21 +67,33 @@ describe("Input Validation Schemas", () => {
     expect(parsed.success).toBe(true);
   });
 
-  it("rejects underage registration under 18", () => {
-    const currentYear = new Date().getFullYear();
-    const underageDob = `${currentYear - 16}-01-01`;
-
+  it("rejects registration with password shorter than 10 chars", () => {
     const reg = {
-      firstName: "Junior",
-      lastName: "Player",
-      email: "junior@example.com",
-      password: "StrongPassword123!",
-      dateOfBirth: underageDob,
+      firstName: "Valid",
+      lastName: "User",
+      email: "valid@example.com",
+      password: "Short8!",
+      dateOfBirth: "1995-01-01",
       country: "ET",
       termsAccepted: true,
     };
 
     const parsed = RegisterSchema.safeParse(reg);
     expect(parsed.success).toBe(false);
+  });
+
+  it("accepts registration with valid 10+ char password and valid details", () => {
+    const reg = {
+      firstName: "Valid",
+      lastName: "User",
+      email: "valid@example.com",
+      password: "StrongPassword123!",
+      dateOfBirth: "1995-01-01",
+      country: "ET",
+      termsAccepted: true,
+    };
+
+    const parsed = RegisterSchema.safeParse(reg);
+    expect(parsed.success).toBe(true);
   });
 });

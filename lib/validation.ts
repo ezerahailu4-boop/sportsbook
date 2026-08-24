@@ -4,7 +4,7 @@ export const RegisterSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(10, "Password must be at least 10 characters"),
   phone: z.string().optional(),
   dateOfBirth: z.string().refine((val) => {
     const d = new Date(val);
@@ -14,7 +14,7 @@ export const RegisterSchema = z.object({
     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
     return age >= 18;
   }, "You must be at least 18 years old to register"),
-  country: z.string().default("ET"),
+  country: z.string().min(2, "Country is required"),
   termsAccepted: z.literal(true, {
     errorMap: () => ({ message: "You must accept the terms & conditions" }),
   }),

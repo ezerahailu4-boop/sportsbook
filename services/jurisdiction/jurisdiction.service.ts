@@ -48,7 +48,21 @@ export function extractCountryFromHeaders(headers: Headers): string {
   return "ET";
 }
 
-export async function checkIpJurisdiction(ipAddress: string, headers?: Headers): Promise<JurisdictionCheckResult> {
-  const country = headers ? extractCountryFromHeaders(headers) : "ET";
-  return checkJurisdiction(country);
+export function getAllowedCountries(): Array<{ code: string; name: string }> {
+  const countryNameMap: Record<string, string> = {
+    ET: "Ethiopia",
+    KE: "Kenya",
+    NG: "Nigeria",
+    GH: "Ghana",
+    UG: "Uganda",
+    TZ: "Tanzania",
+    RW: "Rwanda",
+    ZA: "South Africa",
+  };
+
+  return Array.from(ALLOWED_COUNTRIES).map((code) => ({
+    code,
+    name: countryNameMap[code] || code,
+  }));
 }
+

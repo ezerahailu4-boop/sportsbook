@@ -28,7 +28,7 @@ const SAMPLE_BETS_STREAM = [
   },
   {
     id: "bet_9819",
-    user: "Demo Bettor",
+    user: "Yohannes Girma",
     betType: "SINGLE",
     selections: 1,
     stake: "1,000.00 ETB",

@@ -48,12 +48,24 @@ export function MatchCard({
 }: MatchCardProps) {
   const eventLabel = `${homeTeam} vs ${awayTeam}`;
 
-  const formattedDate = new Date(commenceTime).toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const dateObj = new Date(commenceTime);
+  const now = new Date();
+  const isToday = now.toDateString() === dateObj.toDateString();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const isTomorrow = tomorrow.toDateString() === dateObj.toDateString();
+
+  const formattedDate = isToday
+    ? `Today, ${dateObj.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`
+    : isTomorrow
+    ? `Tomorrow, ${dateObj.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`
+    : dateObj.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
   return (
     <div className="glass-card rounded-2xl p-4 flex flex-col gap-3 group relative overflow-hidden">
@@ -72,8 +84,8 @@ export function MatchCard({
             <span>LIVE {liveMinute ? `• ${liveMinute}` : ""}</span>
           </div>
         ) : (
-          <div className="flex items-center gap-1 text-[11px] text-slate-400">
-            <Clock className="h-3 w-3" />
+          <div className="flex items-center gap-1 text-[11px] text-slate-400 font-medium">
+            <Clock className="h-3 w-3 text-slate-500" />
             <span>{formattedDate}</span>
           </div>
         )}
@@ -107,10 +119,12 @@ export function MatchCard({
         {/* Link to all markets */}
         <Link
           href={`/events/${eventId}`}
-          className="hidden sm:flex items-center gap-1 rounded-xl bg-slate-900 border border-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-400 hover:text-emerald-400 hover:border-slate-700 transition"
+          className="hidden sm:flex items-center gap-1.5 rounded-xl bg-slate-900/90 border border-slate-800 px-3 py-1.5 text-[11px] font-bold text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 hover:bg-slate-850 transition shadow-sm"
+          title="View all betting markets for this fixture"
         >
-          <span>+{marketCount}</span>
-          <ChevronRight className="h-3.5 w-3.5" />
+          <span className="text-emerald-400 font-extrabold">+{marketCount}</span>
+          <span>Markets</span>
+          <ChevronRight className="h-3 w-3 text-slate-500 group-hover:text-emerald-400" />
         </Link>
       </div>
 
@@ -139,14 +153,11 @@ export function MatchCard({
         </div>
       )}
 
-      {/* Footer Timestamp */}
-      <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
-        <span className="flex items-center gap-1">
-          <Radio className="h-2.5 w-2.5 text-emerald-500 animate-pulse" />
-          <span>Odds updated {lastUpdatedSecondsAgo}s ago</span>
-        </span>
-        <Link href={`/events/${eventId}`} className="sm:hidden text-emerald-400 font-medium">
-          More markets →
+      {/* Mobile more markets button */}
+      <div className="sm:hidden flex justify-end pt-0.5">
+        <Link href={`/events/${eventId}`} className="text-emerald-400 text-xs font-bold flex items-center gap-1">
+          <span>+{marketCount} Markets</span>
+          <ChevronRight className="h-3 w-3" />
         </Link>
       </div>
 

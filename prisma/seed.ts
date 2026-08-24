@@ -58,8 +58,8 @@ async function main() {
       userId: demoUser.id,
       mode: "DEMO",
       currency: "ETB",
-      availableBalance: 5000.0,
-      totalDeposited: 5000.0,
+      availableBalance: 50.0,
+      totalDeposited: 50.0,
     },
   });
 

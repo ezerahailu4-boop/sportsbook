@@ -149,7 +149,7 @@ export function Header() {
               {/* Wallet balance pill */}
               <div className="flex items-center rounded-xl bg-slate-900 border border-slate-800 p-1 pl-3 shadow-inner">
                 <div className="flex flex-col mr-2 text-right">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Demo Balance</span>
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Wallet Balance</span>
                   <span className="text-sm font-bold text-emerald-400 tabular-nums">
                     {user.wallet ? Number(user.wallet.availableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "0.00"} {user.wallet?.currency ?? "ETB"}
                   </span>

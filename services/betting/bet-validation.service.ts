@@ -29,7 +29,8 @@ export type ValidationFailureCode =
   | "ODDS_CHANGED"
   | "INSUFFICIENT_BALANCE"
   | "ACCOUNT_RESTRICTED"
-  | "LIMIT_EXCEEDED";
+  | "LIMIT_EXCEEDED"
+  | "KYC_REQUIRED";
 
 export interface ValidationFailure {
   success: false;
@@ -77,6 +78,10 @@ export async function validateBetRequest(req: PlaceBetRequest): Promise<Validati
   const user = await prisma.user.findUnique({ where: { id: req.userId } });
   if (!user || user.status !== "ACTIVE") {
     return { success: false, error: { code: "ACCOUNT_RESTRICTED", message: "Your account cannot place bets right now." } };
+  }
+
+  if (process.env.REAL_MONEY_ENABLED === "true" && user.kycStatus !== "VERIFIED") {
+    return { success: false, error: { code: "KYC_REQUIRED", message: "Identity verification (KYC) is required before placing real-money bets." } };
   }
 
   const rgCheck = await checkCanBet(req.userId, req.stake);
