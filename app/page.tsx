@@ -13,6 +13,8 @@ import {
 import { getEventsForSport, getLiveEvents } from "@/services/odds/odds.service";
 import { MatchCard } from "@/components/betting/MatchCard";
 import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
+import { SuperHeroBanner } from "@/components/betting/SuperHeroBanner";
+import { TopLeaguesBar } from "@/components/betting/TopLeaguesBar";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 
@@ -24,11 +26,17 @@ export const revalidate = 0; // Fresh fixtures on every request
 export default async function HomePage() {
   // Fetch popular matches
   const { events: eplEvents } = await getEventsForSport("soccer_epl");
+  const { events: laLigaEvents } = await getEventsForSport("soccer_spain_la_liga");
+  const { events: championsEvents } = await getEventsForSport("soccer_uefa_champs_league");
   const { events: nbaEvents } = await getEventsForSport("basketball_nba");
   const { events: liveEvents } = await getLiveEvents();
 
   const activeLiveEvents = liveEvents.filter((e) => e.isLive);
-  const featuredMatch = eplEvents[0] ?? null;
+  const featuredMatches = [
+    ...(eplEvents.slice(0, 2)),
+    ...(championsEvents.slice(0, 1)),
+    ...(laLigaEvents.slice(0, 1)),
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -41,54 +49,11 @@ export default async function HomePage() {
         {/* Main Content Feed */}
         <div className="flex-1 flex flex-col gap-6 min-w-0">
           
-          {/* Featured Match & Hero Promo Banner */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 p-6 overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div className="flex flex-col gap-2 max-w-lg">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
-                    <Sparkles className="h-3 w-3 mr-1" /> Featured Match
-                  </span>
-                  <span className="text-xs text-slate-400">{featuredMatch?.league ?? "Premier League"}</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  {featuredMatch ? (
-                    <>{featuredMatch.homeTeam} <span className="text-emerald-400 font-normal">vs</span> {featuredMatch.awayTeam}</>
-                  ) : (
-                    <>Top Matches <span className="text-emerald-400 font-normal">Today</span></>
-                  )}
-                </h1>
-                <p className="text-xs text-slate-300">
-                  Live odds with enhanced Accumulator Boost up to 50% extra winnings on 4+ legs.
-                </p>
-                <div className="flex items-center gap-3 mt-2">
-                  <Link
-                    href={featuredMatch ? `/events/${featuredMatch.externalId}` : "/sports/soccer_epl"}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/20 hover:brightness-110 transition"
-                  >
-                    <span>View Match Markets</span>
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  </Link>
-                  <Link
-                    href="/promotions"
-                    className="rounded-xl bg-slate-800/80 px-3.5 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition"
-                  >
-                    View Promotions
-                  </Link>
-                </div>
-              </div>
+          {/* Top Competitions Quick Scroller */}
+          <TopLeaguesBar />
 
-              {/* Quick Promo Badge */}
-              <div className="hidden md:flex flex-col items-center justify-center rounded-2xl bg-slate-950/60 border border-slate-800 p-4 min-w-[170px] text-center backdrop-blur-sm">
-                <Gift className="h-6 w-6 text-emerald-400 mb-1" />
-                <span className="text-xs font-bold text-white">Welcome Offer</span>
-                <span className="text-base font-black text-emerald-400">100% MATCH</span>
-                <span className="text-[10px] text-slate-400 mt-0.5">Up to 2,000 ETB</span>
-              </div>
-            </div>
-          </div>
+          {/* Super Match of the Day Epic Hero Banner */}
+          <SuperHeroBanner featuredEvents={featuredMatches} />
 
           {/* In-Play Live Now Section */}
           {activeLiveEvents.length > 0 && (
