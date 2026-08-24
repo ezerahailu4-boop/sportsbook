@@ -15,6 +15,7 @@ import { MatchCard } from "@/components/betting/MatchCard";
 import { LiveMatchCard } from "@/components/betting/LiveMatchCard";
 import { SuperHeroBanner } from "@/components/betting/SuperHeroBanner";
 import { TopLeaguesBar } from "@/components/betting/TopLeaguesBar";
+import { BigMatchesShowcase } from "@/components/betting/BigMatchesShowcase";
 import { BetSlip } from "@/components/betting/BetSlip";
 import { Sidebar } from "@/components/shared/Sidebar";
 
@@ -54,6 +55,9 @@ export default async function HomePage() {
 
           {/* Super Match of the Day Epic Hero Banner */}
           <SuperHeroBanner featuredEvents={featuredMatches} />
+
+          {/* Today & Weekend Big Matches Visual Gallery */}
+          <BigMatchesShowcase />
 
           {/* In-Play Live Now Section */}
           {activeLiveEvents.length > 0 && (
