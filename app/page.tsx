@@ -39,6 +39,12 @@ export default async function HomePage() {
     ...(laLigaEvents.slice(0, 1)),
   ];
 
+  const topRealMatches = [
+    ...eplEvents.slice(0, 3),
+    ...laLigaEvents.slice(0, 2),
+    ...championsEvents.slice(0, 2),
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       
@@ -56,8 +62,8 @@ export default async function HomePage() {
           {/* Super Match of the Day Epic Hero Banner */}
           <SuperHeroBanner featuredEvents={featuredMatches} />
 
-          {/* Today & Weekend Big Matches Visual Gallery */}
-          <BigMatchesShowcase />
+          {/* Today & Weekend Big Matches Visual Gallery (100% Real Live Matches) */}
+          <BigMatchesShowcase events={topRealMatches} />
 
           {/* In-Play Live Now Section */}
           {activeLiveEvents.length > 0 && (
